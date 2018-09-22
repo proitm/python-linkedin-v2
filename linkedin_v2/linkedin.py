@@ -408,7 +408,32 @@ class LinkedInApplication(object):
 
     def submit_company_share(self, **kwargs):
         params = kwargs.pop('params', True)
-        response = application.make_request(
+        response = self.make_request(
             'POST', ENDPOINTS.SHARE, data=json.dumps(params))
         raise_for_error(response)
+        return response.json()
+
+    def _submit_share(self, comment=None, title=None, description=None,
+                      submitted_url=None, submitted_image_url=None,
+                      visibility_code='anyone'):
+        profile = self.get_profile()
+        post = {
+            'owner': 'urn:li:person:%s' % profile['id'],
+            "text": {
+                "text": description
+            },
+            "subject": title
+        }
+
+        if comment is not None:
+            post['comment'] = comment
+        # if title is not None and submitted_url is not None:
+        #     post['content'] = {
+        #         'title': title,
+        #         'submitted-url': submitted_url,
+        #         'description': description,
+        #     }
+        if submitted_image_url:
+            post['content']['contentEntities']['thumbnails']['resolvedUrl'] = submitted_image_url
+        response = self.make_request('POST', 'https://api.linkedin.com/v2/shares', data=json.dumps(post))
         return response.json()
