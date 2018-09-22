@@ -2,7 +2,7 @@
 
 Python interface to the LinkedIn API V2
 
-[![LinkedIn](http://developer.linkedin.com/sites/default/files/LinkedIn_Logo60px.png)](http://developer.linkedin.com)
+[![LinkedIn](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqi-foxSAvvgys60fsWa8k5ZXPtG5smzSXF5oBo3g9c1uxPEUOaw)](http://developer.linkedin.com)
 
 This library provides a pure Python interface to the LinkedIn **Profile** and **Connections** REST APIs.
 
