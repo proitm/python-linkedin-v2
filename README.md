@@ -10,8 +10,6 @@ This library provides a pure Python interface to the LinkedIn **Profile** and **
 
 ## Installation
 
-[![Build Status](https://travis-ci.org/ozgur/python-linkedin.png?branch=master)](https://travis-ci.org/ozgur/python-linkedin)
-
 You can install **python-linkedin-v2** library via pip:
 
     $ pip install python-linkedin-v2
