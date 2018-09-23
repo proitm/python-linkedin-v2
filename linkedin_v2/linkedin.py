@@ -322,14 +322,14 @@ class LinkedInApplication(object):
         # raise_for_error(response)
         return response.json()
 
-    def get_groupss(self, group_id, params=None, headers=None):
+    def get_group(self, group_id, params=None, headers=None):
         url = '%s/groupDefinitions/%s' % (ENDPOINTS.BASE, group_id)
         response = self.make_request(
             'GET', url, params=params, headers=headers)
         raise_for_error(response)
         return response.json()
 
-    def get_groups(self, group_ids, params=None, headers=None):
+    def get_group_by_ids(self, group_ids, params=None, headers=None):
         url = '%s/groupDefinitions/?ids=List(%s)' % (ENDPOINTS.BASE, group_ids)
         response = self.make_request(
             'GET', url, params=params, headers=headers)
@@ -427,12 +427,6 @@ class LinkedInApplication(object):
 
         if comment is not None:
             post['comment'] = comment
-        # if title is not None and submitted_url is not None:
-        #     post['content'] = {
-        #         'title': title,
-        #         'submitted-url': submitted_url,
-        #         'description': description,
-        #     }
         if submitted_image_url:
             post['content']['contentEntities']['thumbnails']['resolvedUrl'] = submitted_image_url
         response = self.make_request('POST', 'https://api.linkedin.com/v2/shares', data=json.dumps(post))
