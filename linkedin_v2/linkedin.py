@@ -180,6 +180,12 @@ class LinkedInApplication(object):
 
         return requests.request(method.upper(), url, **kw)
 
+    def make_get_request(self, url):
+        print(url)
+        response = self.make_request('GET', url)
+        # raise_for_error(response)
+        return response.json()
+
     def get_connections(self, totals_only=None, params=None, headers=None):
         count = '50'
         if totals_only:
@@ -301,9 +307,7 @@ class LinkedInApplication(object):
 
     def search_job(self):
         url = '%s/recommendedJobs?q=byMember' % ENDPOINTS.BASE
-        response = self.make_request('GET', url)
-        # raise_for_error(response)
-        return response.json()
+        return self.make_get_request(url)
 
     def get_job(self, **kwargs):
         return self.search_job()
@@ -413,9 +417,74 @@ class LinkedInApplication(object):
                                    visibility_code=visibility_code)
         return response
 
-    def get_testing(self):
-        url = 'https://api.linkedin.com/v2/shares?q=owners&owners=urn:li:person:%s&sharesPerOwner=100' % self.get_profile()[
-            "id"]
-        response = self.make_request('GET', url)
+    def find_member_organization_access_info(self, **kwargs):
+        # https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee
+        url = "%s/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,roleAssignee~(localizedFirstName, localizedLastName), organizationalTarget~(localizedName)))" % ENDPOINTS.BASE
+        return self.make_get_request(url)
+
+    def find_organization_access_control_info(self, organization_id):
+        # https://api.linkedin.com/v2/organizationalEntityAcls?q=organizationalTarget&organizationalTarget={URN}
+        url = "%s/organizationalEntityAcls?q=organizationalTarget&organizationalTarget=urn:li:organization:%s" % (
+            ENDPOINTS.BASE, organization_id)
+        return self.make_get_request(url)
+
+    def retrieve_lifetime_follower_statistics(self, organization_id):
+        # https://api.linkedin.com/v2/organizationalEntityFollowerStatistics?q=organizationalEntity&organizationalEntity={organization URN}
+        url = "%s/organizationalEntityFollowerStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:%s" % (
+            ENDPOINTS.BASE, organization_id)
+        print(url)
+        return self.make_get_request(url)
+
+    def retrieve_time_bound_follower_statistics(self, organization_id, range_start, range_end):
+        # https://api.linkedin.com/v2/organizationalEntityFollowerStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:2414183&timeIntervals.timeGranularityType=DAY&timeIntervals.timeRange.start=1451606400000&timeIntervals.timeRange.end=1452211200000
+        url = "%s/organizationalEntityFollowerStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:%s&timeIntervals.timeGranularityType=DAY&timeIntervals.timeRange.start=%s&timeIntervals.timeRange.end=%s" % (
+            ENDPOINTS.BASE, organization_id, range_start, range_end)
+        return self.make_get_request(url)
+
+    def retrieve_organization_page_statistics(self, organization_id):
+        # https://api.linkedin.com/v2/organizationPageStatistics?q=organization&organization={organization URN}
+        url = "%s/organizationPageStatistics?q=organization&organization=urn:li:organization:%s" % (
+            ENDPOINTS.BASE, organization_id)
+        return self.make_get_request(url)
+
+    def retrieve_share_statistics(self, organization_id):
+        # https://api.linkedin.com/v2/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity={organization URN}
+        url = "%s/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:%s" % (
+            ENDPOINTS.BASE, organization_id)
+        return self.make_get_request(url)
+
+    def retrieve_organization_brand_page_statistics(self, brand_id):
+        # https://api.linkedin.com/v2/brandPageStatistics?q=brand&brand=urn:li:organizationBrand:3617422
+        url = "%s/brandPageStatistics?q=brand&brand=urn:li:organizationBrand:%s" % (
+            ENDPOINTS.BASE, brand_id)
+        return self.make_get_request(url)
+
+    def delete_share(self, share_id):
+        # https://api.linkedin.com/v2/shares/{share ID}
+        url = "%s/shares/%s" % (ENDPOINTS.BASE, share_id)
+        response = self.make_request('DELETE', url)
+        # raise_for_error(response)
         return response.json()
 
+    def retrieve_likes_on_shares(self, share_id):
+        # https://api.linkedin.com/v2/socialActions/{shareUrn|ugcPostUrn|commentUrn|groupPostUrn}/likes
+        url = "%s/socialActions/urn:li:share:%s/likes" % (
+            ENDPOINTS.BASE, share_id)
+        return self.make_get_request(url)
+
+    def retrieve_comments_on_shares(self, share_id):
+        # https://api.linkedin.com/v2/socialActions/{shareUrn|ugcPostUrn|commentUrn|groupPostUrn}/comments
+        url = "%s/socialActions/urn:li:share:%s/comments" % (
+            ENDPOINTS.BASE, share_id)
+        return self.make_get_request(url)
+
+    def retrieve_statistics_specific_shares(self, organization_id, share_ids):
+        # https://api.linkedin.com/v2/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:2414183&shares[0]=urn:li:share:1000000&shares[1]=urn:li:share:1000001
+        shaer_str = ''
+        count = 0
+        for item in share_ids:
+            shaer_str = '&shares['+str(count)+']=urn:li:share:'+item
+            count = count + 1
+        url = "%s/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:%s%s" % (
+            ENDPOINTS.BASE, organization_id, shaer_str)
+        return self.make_get_request(url)
