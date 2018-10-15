@@ -16,6 +16,7 @@ setup(name='python-linkedin-v2',
       version=__version__,
       description='Python Interface to the LinkedIn API V2',
       long_description=long_description,
+      long_description_content_type="text/markdown",
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Console',
