@@ -275,7 +275,7 @@ class LinkedInApplication(object):
         if submitted_url is not None:
             post['content']['submitted-url'] = submitted_url
         if submitted_image_url is not None:
-            post['content']['contentEntities']['thumbnails'][0]['resolvedUrl'] = submitted_image_url
+            post['content']['contentEntities']['thumbnails'] = [{'resolvedUrl': submitted_image_url}]
         response = self.make_request(
             'POST', ENDPOINTS.SHARE, data=json.dumps(post))
         return response.json()
