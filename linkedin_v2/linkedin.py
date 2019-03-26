@@ -196,6 +196,16 @@ class LinkedInApplication(object):
         # raise_for_error(response)
         return response.json()
 
+    def get_companies(self, totals_only=None, params=None, headers=None):
+        count = '50'
+        if totals_only:
+            count = '0'
+        url = '%s?q=viewer&start=0&count=%s' % (ENDPOINTS.COMPANIES, count)
+        response = self.make_request(
+            'GET', url, params=params, headers=headers)
+        # raise_for_error(response)
+        return response.json()
+
     def get_profile(self, member_id=None, member_url=None, selectors=None,
                     params=None, headers=None):
         connections = 0
