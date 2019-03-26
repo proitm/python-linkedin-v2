@@ -429,7 +429,7 @@ class LinkedInApplication(object):
 
     def find_member_organization_access_info(self, **kwargs):
         # https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee
-        url = "%s/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,roleAssignee~(localizedFirstName, localizedLastName), organizationalTarget~(id,name,localizedName,vanityName,logoV2(displayImage~:playableStreams))))" % ENDPOINTS.BASE
+        url = "%s/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,roleAssignee~(localizedFirstName, localizedLastName), organizationalTarget~(id,name,localizedName,vanityName,logo)))" % ENDPOINTS.BASE
         return self.make_get_request(url)
 
     def find_organization_access_control_info(self, organization_id):
