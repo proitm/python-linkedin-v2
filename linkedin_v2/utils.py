@@ -68,7 +68,10 @@ def raise_for_error(response):
                 error_code = response.get('status')
                 ex = get_exception_for_error_code(error_code)
                 raise ex(message)
-            else:
+            try:
+                ex = get_exception_for_error_code(error.response.status_code)
+                raise ex(message)
+            except:
                 raise LinkedInError(error)
         except (ValueError, TypeError):
             raise LinkedInError(error.message)
