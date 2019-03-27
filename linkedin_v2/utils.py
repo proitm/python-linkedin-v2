@@ -70,7 +70,7 @@ def raise_for_error(response):
                 raise ex(message)
             try:
                 ex = get_exception_for_error_code(error.response.status_code)
-                raise ex(message)
+                raise ex(error.response.content)
             except:
                 raise LinkedInError(error)
         except (ValueError, TypeError):
