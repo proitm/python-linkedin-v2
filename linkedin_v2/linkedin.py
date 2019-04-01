@@ -273,9 +273,14 @@ class LinkedInApplication(object):
         if title is not None:
             post['content']['title'] = title
         if submitted_url is not None:
-            post['content']['submitted-url'] = submitted_url
+            post['content']['contentEntities'][0]['entityLocation'] = submitted_url
         if submitted_image_url is not None:
             post['content']['contentEntities'][0]['thumbnails'] = [{'resolvedUrl': submitted_image_url}]
+            post['content']['shareMediaCategory'] = 'IMAGE'
+        elif submitted_url:
+            post['content']['shareMediaCategory'] = 'ARTICLE'
+        else:
+            post['content']['shareMediaCategory'] = 'NONE'
         response = self.make_request(
             'POST', ENDPOINTS.SHARE, data=json.dumps(post))
         return response.json()
