@@ -278,6 +278,7 @@ class LinkedInApplication(object):
             post['content']['contentEntities'][0]['thumbnails'] = [{'resolvedUrl': submitted_image_url}]
         response = self.make_request(
             'POST', ENDPOINTS.SHARE, data=json.dumps(post))
+        raise_for_error(response)
         return response.json()
 
     def search_company(self, params):
@@ -405,7 +406,7 @@ class LinkedInApplication(object):
         raise_for_error(response)
         return response.json()
 
-    def get_group(self):
+    def get_group_memverships(self):
         print(ENDPOINTS.BASE)
         url = "%s/groupMemberships?q=member&member=urn:li:person:%s&membershipStatuses=List(MEMBER,OWNER)" % (
             ENDPOINTS.BASE, self.get_profile()['id'])
