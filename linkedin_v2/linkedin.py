@@ -459,6 +459,11 @@ class LinkedInApplication(object):
             ENDPOINTS.BASE, organization_id)
         return self.make_get_request(url)
 
+    def retrieve_network_sizes(self, organization_id):
+        url = "%s/networkSizes/urn:li:organization:%s?edgeType=CompanyFollowedByMember" % (
+            ENDPOINTS.BASE, organization_id)
+        return self.make_get_request(url)
+
     def retrieve_share_statistics(self, organization_id):
         # https://api.linkedin.com/v2/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity={organization URN}
         url = "%s/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=urn:li:organization:%s" % (
